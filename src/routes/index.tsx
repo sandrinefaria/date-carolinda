@@ -61,6 +61,8 @@ function DateInvite() {
           <StepSac
             value={note}
             onChange={setNote}
+            activity={activity}
+            picked={picked}
             onNext={() => setStep(3)}
           />
         )}
@@ -253,10 +255,14 @@ function StepActivities({
 function StepSac({
   value,
   onChange,
+  activity,
+  picked,
   onNext,
 }: {
   value: string;
   onChange: (v: string) => void;
+  activity: string | null;
+  picked: { y: number; m: number; d: number } | null;
   onNext: () => void;
 }) {
   const [sending, setSending] = useState(false);
@@ -270,11 +276,19 @@ function StepSac({
 
     setErrorMsg(false);
     setSending(true);
+    
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const dateLabel = picked ? `${pad(picked.d)}/${pad(picked.m + 1)}/${picked.y}` : "a definir no calendário";
+
     try {
       await fetch("https://formspree.io/f/xzepqknv", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mensagem_sac: value }),
+        body: JSON.stringify({
+          mensagem_sac: value,
+          atividade_escolhida: activity ?? "Não informada",
+          data_marcada: dateLabel,
+        }),
       });
     } catch (e) {
       console.error("Erro ao enviar", e);
