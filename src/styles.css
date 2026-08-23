@@ -147,3 +147,95 @@
     color: var(--color-foreground);
   }
 }
+
+@theme inline {
+  --font-pixel: var(--font-pixel);
+  --font-term: var(--font-term);
+}
+
+@layer base {
+  body {
+    font-family: var(--font-term);
+    font-size: 1.15rem;
+    background-color: oklch(0.9 0.06 340);
+    background-image:
+      linear-gradient(oklch(0.25 0.09 320 / 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.25 0.09 320 / 0.09) 1px, transparent 1px);
+    background-size: 16px 16px;
+    image-rendering: pixelated;
+  }
+}
+
+@utility font-pixel {
+  font-family: var(--font-pixel);
+  letter-spacing: -0.02em;
+  line-height: 1.6;
+}
+
+@utility win {
+  background: var(--card);
+  border: 3px solid var(--border);
+  box-shadow: var(--shadow-pixel);
+}
+
+@utility win-title {
+  background: var(--win-title);
+  color: var(--primary-foreground);
+  border-bottom: 3px solid var(--border);
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@utility pixel-btn {
+  font-family: var(--font-pixel);
+  border: 3px solid var(--border);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+  transition: transform 0.08s steps(2), box-shadow 0.08s steps(2);
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 0 var(--border);
+  }
+  &:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 var(--border);
+  }
+}
+
+@utility pixel-btn-alt {
+  font-family: var(--font-pixel);
+  border: 3px solid var(--border);
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  box-shadow: var(--shadow-pixel-sm);
+}
+
+@utility blink {
+  animation: blinky 1s steps(2) infinite;
+}
+
+@utility marquee-track {
+  animation: marquee 18s linear infinite;
+}
+
+@keyframes blinky {
+  50% { opacity: 0.15; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes floaty {
+  50% { transform: translateY(-8px) rotate(-4deg); }
+}
+
+@utility floaty {
+  animation: floaty 3s ease-in-out infinite;
+}
