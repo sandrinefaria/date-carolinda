@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
 import { RetroWindow, PixelHeart } from "@/components/RetroWindow";
+import { saveDateResponse } from "@/lib/date-response.functions";
 import ziggy from "@/assets/ziggy.webp.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -400,9 +402,15 @@ function StepFinal({
   picked: { y: number; m: number; d: number } | null;
 }) {
   const [confetti, setConfetti] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const saveResponse = useServerFn(saveDateResponse);
+
   useEffect(() => {
     setConfetti(true);
-  }, []);
+    saveResponse({ data: { activity: activity ?? "", note, picked } })
+      .then(() => setSaved(true))
+      .catch(() => setSaved(false));
+  }, [activity, note, picked, saveResponse]);
 
   const pad = (n: number) => String(n).padStart(2, "0");
   const dateLabel = picked ? `${pad(picked.d)}/${pad(picked.m + 1)}/${picked.y}` : "a definir";
@@ -478,6 +486,11 @@ function StepFinal({
           >
             📅 salvar na agenda
           </a>
+          {saved && (
+            <p className="blink font-pixel text-[0.55rem] text-primary">
+              ✉ recado arquivado no servidor do amor
+            </p>
+          )}
         </div>
       </div>
     </>
