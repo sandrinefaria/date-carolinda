@@ -1,27 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
 import { RetroWindow, PixelHeart } from "@/components/RetroWindow";
-import { saveDateResponse } from "@/lib/date-response.functions";
-import ziggy from "@/assets/ziggy.webp.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sim ou Com Certeza? — Convite de Date Retrô" },
+      { title: "SIM ou COM CERTEZA? — Convite de Date Retrô" },
       {
         name: "description",
         content:
-          "Convite interativo de date em estética anos 2000: escolha o rolê, mande sua reclamação no SAC e marque a data no calendário do crime.",
+          "Convite interativo de date em estética anos 2000: escolha o rolê, mande sua reclamação no SAC e marque a data.",
       },
-      { property: "og:title", content: "Sim ou Com Certeza? — Convite de Date Retrô" },
+      { property: "og:title", content: "SIM ou COM CERTEZA? — Convite de Date Retrô" },
       {
         property: "og:description",
-        content:
-          "O nosso próximo date vai acontecer: Sim ou Com Certeza? Um convite interativo com cara de Windows 98 e romance irônico.",
+        content: "O nosso próximo date vai acontecer: Sim ou Com Certeza?",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: DateInvite,
@@ -29,12 +24,13 @@ export const Route = createFileRoute("/")({
 
 const ACTIVITIES = [
   { icon: "👀", label: "Julgar as coisas compartilhando o humor duvidoso" },
-  { icon: "🎮", label: "Perder em algum jogo pra gente descontar a raiva uma na outra" },
+  { icon: "🎮", label: "Perder em algum jogo/aposta pra gente descontar a raiva uma na outra" },
   { icon: "🌯", label: "Você faz burritos no jantar, eu faço Pad Thai no almoço" },
   { icon: "📺", label: "Ver algum GL e recriar as cenas" },
   { icon: "😴", label: "Colocar o sono em dia juntas" },
-  { icon: "🖍️", label: "Fazer um desenho uma pra outra juntas" },
+  { icon: "🖍️", label: "Fazer um desenho uma pra outra" },
   { icon: "🔮", label: "Date misterioso" },
+  { icon: "💡", label: "Eu gostaria de sugerir uma nova opção" },
 ];
 
 const MONTHS = [
@@ -62,13 +58,17 @@ function DateInvite() {
           />
         )}
         {step === 2 && (
-          <StepSac value={note} onChange={setNote} onNext={() => setStep(3)} />
+          <StepSac
+            value={note}
+            onChange={setNote}
+            onNext={() => setStep(3)}
+          />
         )}
         {step === 3 && (
           <StepCalendar picked={picked} onPick={setPicked} onNext={() => setStep(4)} />
         )}
         {step === 4 && (
-          <StepFinal activity={activity} note={note} picked={picked} />
+          <StepFinal activity={activity} picked={picked} />
         )}
       </div>
     </main>
@@ -79,13 +79,13 @@ function TopBar({ step }: { step: number }) {
   return (
     <div className="win overflow-hidden">
       <div className="win-title">
-        <span>c:\amor\convite.exe</span>
+        <span>c:\date\convite.exe</span>
         <span>{step + 1}/5</span>
       </div>
       <div className="overflow-hidden whitespace-nowrap bg-accent py-1 font-pixel text-[0.55rem] text-accent-foreground">
         <span className="marquee-track inline-block">
-          ★ bem-vinda ao meu site pessoal ★ melhor visualizado em 800x600 ★ voce e a visitante
-          numero 000001 ★ nao tem botao de sair ★
+          ★ bem-vinda ao meu coração ★ melhor visualizado em 800x600 ★ você é a visitante
+          número 000001 ★ nao tem botão de sair ★
         </span>
       </div>
     </div>
@@ -118,7 +118,7 @@ function StepAsk({ onYes }: { onYes: () => void }) {
         <h1 className="mt-3 font-pixel text-base leading-relaxed text-foreground sm:text-2xl">
           O nosso próximo date vai acontecer:
           <br />
-          <span className="text-primary">Sim ou Com Certeza?</span>
+          <span className="text-primary">SIM ou COM CERTEZA?</span>
         </h1>
 
         <div
@@ -150,7 +150,7 @@ function StepAsk({ onYes }: { onYes: () => void }) {
         </div>
 
         <p className="mt-6 text-center text-muted-foreground">
-          (o botão "não" está passando por uma instabilidade emocional)
+          (o botão de recusa está temporariamente fora de cogitação)
         </p>
       </RetroWindow>
 
@@ -169,19 +169,19 @@ function ZiggyPopup({ onClose }: { onClose: () => void }) {
             x
           </button>
         </div>
-        <div className="flex gap-4 p-5">
+        <div className="flex gap-4 p-5 items-center">
           <img
-            src={ziggy.url}
-            alt="Ziggy, o husky guardião do botão não"
-            className="h-24 w-24 border-3 border-border object-cover"
+            src="/Ziggy.webp"
+            alt="Ziggy, o husky guardião"
+            className="h-24 w-24 shrink-0 border-3 border-border object-cover"
             style={{ borderWidth: 3 }}
           />
           <div>
             <p className="font-pixel text-[0.6rem] leading-relaxed text-destructive">
-              ⚠ O Ziggy bloqueou este botão
+              ⚠ Ziggy bloqueou esta tentativa
             </p>
             <p className="mt-2 leading-tight text-muted-foreground">
-              Erro 0xZIG: recusa não autorizada pelo cão de guarda. Tente novamente em nunca.
+              Error404: recusa não autorizada pelo cão de guarda do meu coração.
             </p>
           </div>
         </div>
@@ -207,9 +207,9 @@ function StepActivities({
   onNext: () => void;
 }) {
   return (
-    <RetroWindow title="cardapio_de_roles.exe">
+    <RetroWindow title="cardapio_de_ideias.exe">
       <h2 className="font-pixel text-sm leading-relaxed text-foreground sm:text-lg">
-        O que você prefere (ou vai ter que aceitar)?
+        Selecione o programa oficial:
       </h2>
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {ACTIVITIES.map((a) => {
@@ -234,7 +234,7 @@ function StepActivities({
       </div>
       <div className="mt-6 flex items-center justify-between gap-4">
         <p className="text-muted-foreground">
-          {selected ? "boa escolha, previsível." : "escolha uma, o silêncio também é uma escolha ruim."}
+          {selected ? "ótima escolha registrada." : "selecione uma das alternativas acima para prosseguir."}
         </p>
         <button
           disabled={!selected}
@@ -259,7 +259,25 @@ function StepSac({
   onChange: (v: string) => void;
   onNext: () => void;
 }) {
-  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  async function handleContinue() {
+    if (value.trim()) {
+      setSending(true);
+      try {
+        await fetch("https://formspree.io/f/xzepqknv", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mensagem_sac: value }),
+        });
+      } catch (e) {
+        console.error("Erro ao enviar", e);
+      } finally {
+        setSending(false);
+      }
+    }
+    onNext();
+  }
 
   return (
     <RetroWindow title="sac_da_consumidora.txt">
@@ -268,22 +286,18 @@ function StepSac({
         style={{ border: "3px solid var(--border)" }}
       >
         <p className="font-pixel text-[0.6rem] leading-relaxed text-primary">
-          ☎ central de atendimento — online desde 2003
+          ☎ canal oficial de atendimento e sugestões
         </p>
         <p className="mt-3">
-          "O serviço de atendimento à consumidora aceita dúvidas, reclamações e sugestões.
-          Gostaria de acrescentar algo?"
+          Deixe sua mensagem, reclamação ou sugestão abaixo. Assim que possível, iremos te responder (porém, depende):
         </p>
       </div>
 
       <textarea
         value={value}
-        onChange={(e) => {
-          onChange(e.target.value);
-          setSent(false);
-        }}
+        onChange={(e) => onChange(e.target.value)}
         rows={6}
-        placeholder="digite aqui seu desabafo, exigência ou declaração acidental..."
+        placeholder="digite aqui o seu recado..."
         className="mt-4 w-full resize-none bg-card p-3 font-term text-lg text-foreground outline-none"
         style={{
           border: "3px solid var(--border)",
@@ -292,19 +306,15 @@ function StepSac({
         }}
       />
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <button onClick={() => setSent(true)} className="pixel-btn-alt px-4 py-3 text-[0.6rem]">
-          enviar para a central
-        </button>
-        <button onClick={onNext} className="pixel-btn px-5 py-3 text-[0.6rem]">
-          continuar »
+      <div className="mt-4 flex items-center justify-end gap-3">
+        <button
+          onClick={handleContinue}
+          disabled={sending}
+          className="pixel-btn px-5 py-3 text-[0.6rem]"
+        >
+          {sending ? "enviando..." : "continuar »"}
         </button>
       </div>
-      {sent && (
-        <p className="blink mt-3 font-pixel text-[0.55rem] text-primary">
-          protocolo #{String(value.length).padStart(4, "0")} — sua ligação é muito importante pra mim.
-        </p>
-      )}
     </RetroWindow>
   );
 }
@@ -335,7 +345,18 @@ function StepCalendar({
 
   return (
     <RetroWindow title="calendario_do_crime.exe">
-      <h2 className="font-pixel text-sm text-foreground">Quando será o crime?</h2>
+      <h2 className="font-pixel text-sm text-foreground">Defina a data oficial (não é só a minha agenda que está disponível pra você):</h2>
+
+      {/* Imagem miu.png no tamanho ideal */}
+      <div className="mt-4 flex justify-center">
+        <img
+          src="/miu.png"
+          alt="Miu"
+          className="object-cover"
+          style={{ width: "160px", height: "160px", border: "3px solid var(--border)" }}
+        />
+      </div>
+
       <div className="mt-5" style={{ border: "3px solid var(--border)" }}>
         <div className="flex items-center justify-between bg-primary px-3 py-2 font-pixel text-[0.6rem] text-primary-foreground">
           <button onClick={() => shift(-1)}>« </button>
@@ -375,8 +396,8 @@ function StepCalendar({
       <div className="mt-5 flex items-center justify-between gap-4">
         <p className="text-muted-foreground">
           {picked
-            ? `marcado: ${picked.d}/${picked.m + 1}/${picked.y}. sem remarcações.`
-            : "clique num dia. desmarcar depois dá multa."}
+            ? `data selecionada: ${picked.d}/${picked.m + 1}/${picked.y}.`
+            : "clique em um dia no calendário para continuar."}
         </p>
         <button
           disabled={!picked}
@@ -394,105 +415,60 @@ function StepCalendar({
 
 function StepFinal({
   activity,
-  note,
   picked,
 }: {
   activity: string | null;
-  note: string;
   picked: { y: number; m: number; d: number } | null;
 }) {
   const [confetti, setConfetti] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const saveResponse = useServerFn(saveDateResponse);
 
   useEffect(() => {
     setConfetti(true);
-    saveResponse({ data: { activity: activity ?? "", note, picked } })
-      .then(() => setSaved(true))
-      .catch(() => setSaved(false));
-  }, [activity, note, picked, saveResponse]);
+  }, []);
 
   const pad = (n: number) => String(n).padStart(2, "0");
   const dateLabel = picked ? `${pad(picked.d)}/${pad(picked.m + 1)}/${picked.y}` : "a definir";
-  const gcalDate = picked ? `${picked.y}${pad(picked.m + 1)}${pad(picked.d)}` : "";
-  const next = picked ? new Date(picked.y, picked.m, picked.d + 1) : null;
-  const gcalEnd = next
-    ? `${next.getFullYear()}${pad(next.getMonth() + 1)}${pad(next.getDate())}`
-    : "";
-
-  const gcalUrl =
-    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-    `&text=${encodeURIComponent("Date confirmado 💗 " + (activity ?? ""))}` +
-    (gcalDate ? `&dates=${gcalDate}/${gcalEnd}` : "") +
-    `&details=${encodeURIComponent(
-      "Compromisso inadiável: me suportar por algumas horas." +
-        (note ? `\n\nRecado do SAC: ${note}` : ""),
-    )}`;
 
   return (
-    <>
-      <RetroWindow title="confirmacao_final.exe" className={confetti ? "animate-scale-in" : ""}>
-        <h2 className="font-pixel text-sm leading-relaxed text-primary sm:text-lg">
-          Seu date foi confirmado por livre e espontânea pressão. Esperamos que seja prazeroso 🫦
-        </h2>
+    <RetroWindow title="confirmacao_final.exe" className={confetti ? "animate-scale-in" : ""}>
+      <audio autoPlay src="/lobo.mp3" />
 
-        <div
-          className="relative mt-8 bg-input p-5"
-          style={{ border: "3px dashed var(--border)" }}
-        >
-          <PixelHeart className="blink absolute -top-4 -left-4 h-8 w-8 text-primary" />
-          <PixelHeart className="blink absolute -top-4 -right-4 h-8 w-8 text-primary" />
-          <PixelHeart className="absolute -bottom-4 -left-4 h-8 w-8 text-secondary" />
-          <PixelHeart className="absolute -bottom-4 -right-4 h-8 w-8 text-secondary" />
+      <h2 className="font-pixel text-sm leading-relaxed text-primary sm:text-lg">
+        Tudo certo! Seu interesse foi registrado com sucesso.
+      </h2>
 
-          <dl className="space-y-4">
-            <div>
-              <dt className="font-pixel text-[0.55rem] text-muted-foreground">atividade</dt>
-              <dd className="leading-tight">{activity ?? "surpresa (má)"}</dd>
-            </div>
-            <div>
-              <dt className="font-pixel text-[0.55rem] text-muted-foreground">data do crime</dt>
-              <dd>{dateLabel}</dd>
-            </div>
-            <div>
-              <dt className="font-pixel text-[0.55rem] text-muted-foreground">
-                recado no sac
-              </dt>
-              <dd className="leading-tight">
-                {note.trim() || "nada a declarar (suspeito)."}
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </RetroWindow>
+      <div
+        className="relative mt-8 bg-input p-5"
+        style={{ border: "3px dashed var(--border)" }}
+      >
+        <PixelHeart className="blink absolute -top-4 -left-4 h-8 w-8 text-primary" />
+        <PixelHeart className="blink absolute -top-4 -right-4 h-8 w-8 text-primary" />
+        <PixelHeart className="absolute -bottom-4 -left-4 h-8 w-8 text-secondary" />
+        <PixelHeart className="absolute -bottom-4 -right-4 h-8 w-8 text-secondary" />
 
-      <div className="win">
-        <div className="win-title">
-          <span>⚠ notificacao_do_sistema</span>
-          <span className="blink">!</span>
-        </div>
-        <div className="space-y-4 p-5">
-          <p className="font-pixel text-[0.6rem] leading-relaxed text-foreground">
-            Compromisso inadiável: me suportar por algumas horas.
-          </p>
-          <p className="text-muted-foreground">
-            Salve este link na sua agenda do Google (vai usar sim!)
-          </p>
-          <a
-            href={gcalUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pixel-btn inline-block px-5 py-3 text-[0.6rem]"
-          >
-            📅 salvar na agenda
-          </a>
-          {saved && (
-            <p className="blink font-pixel text-[0.55rem] text-primary">
-              ✉ recado arquivado no servidor do amor
-            </p>
-          )}
-        </div>
+        <dl className="space-y-4">
+          <div>
+            <dt className="font-pixel text-[0.55rem] text-muted-foreground">atividade escolhida</dt>
+            <dd className="leading-tight font-bold text-foreground mt-1">{activity ?? "surpresa"}</dd>
+          </div>
+          <div>
+            <dt className="font-pixel text-[0.55rem] text-muted-foreground">data marcada</dt>
+            <dd className="font-bold text-foreground mt-1">{dateLabel}</dd>
+          </div>
+        </dl>
       </div>
-    </>
+
+      <div className="mt-6 flex flex-col items-center justify-center gap-3">
+        <img
+          src="/depositphotos_124005594-stock-illustration-emoticon-with-rose-between-teeth.jpg"
+          alt="Meme da rosa"
+          className="h-32 w-32 object-cover sm:h-36 sm:w-36"
+          style={{ border: "3px solid var(--border)" }}
+        />
+        <p className="font-pixel text-[0.6rem] text-muted-foreground text-center">
+          recado entregue com sucesso no sistema. agora é só esperar o date! 💌
+        </p>
+      </div>
+    </RetroWindow>
   );
 }
