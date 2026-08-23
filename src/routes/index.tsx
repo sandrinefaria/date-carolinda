@@ -317,7 +317,7 @@ function StepSac({
       {errorMsg && (
         <div className="mt-3 bg-destructive/10 p-3 border-2 border-destructive animate-bounce">
           <p className="font-pixel text-[0.6rem] text-destructive leading-relaxed text-center">
-            ⚠ Agora você não tem escapatória. Se quiser passar para a próxima etapa será preciso escrever algo ou inserir alguma música representativa.
+            ⚠ Agora você não tem escapatória. Se quiser passar para a próxima etapa, será preciso escrever algo ou inserir alguma música representativa.
           </p>
         </div>
       )}
