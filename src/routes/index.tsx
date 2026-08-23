@@ -423,7 +423,7 @@ function StepFinal({
 
   return (
     <>
-      <RetroWindow title="confirmacao_final.exe" className={confetti ? "floaty" : ""}>
+      <RetroWindow title="confirmacao_final.exe" className={confetti ? "animate-scale-in" : ""}>
         <h2 className="font-pixel text-sm leading-relaxed text-primary sm:text-lg">
           Seu date foi confirmado por livre e espontânea pressão. Esperamos que seja prazeroso 🫦
         </h2>
