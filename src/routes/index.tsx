@@ -421,26 +421,18 @@ function StepFinal({
   picked: { y: number; m: number; d: number } | null;
 }) {
   const [confetti, setConfetti] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     setConfetti(true);
+    const audio = new Audio("/lobo.mp3");
+    audio.play().catch((err) => console.log("Áudio bloqueado ou não encontrado:", err));
   }, []);
-
-  function playAudio() {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch((e) => console.log("Erro ao tocar áudio:", e));
-    }
-  }
 
   const pad = (n: number) => String(n).padStart(2, "0");
   const dateLabel = picked ? `${pad(picked.d)}/${pad(picked.m + 1)}/${picked.y}` : "a definir";
 
   return (
     <RetroWindow title="confirmacao_final.exe" className={confetti ? "animate-scale-in" : ""}>
-      <audio ref={audioRef} src="/lobo.mp3" preload="auto" />
-
       <h2 className="font-pixel text-sm leading-relaxed text-primary sm:text-lg">
         Tudo certo! Seu interesse foi registrado com sucesso.
       </h2>
@@ -466,14 +458,7 @@ function StepFinal({
         </dl>
       </div>
 
-      <div className="mt-6 flex flex-col items-center justify-center gap-4">
-        <button
-          onClick={playAudio}
-          className="pixel-btn px-6 py-3 text-[0.6rem] flex items-center gap-2 animate-bounce"
-        >
-          🔊 Tocar trilha sonora do lobo
-        </button>
-
+      <div className="mt-6 flex flex-col items-center justify-center gap-3">
         <img
           src="/depositphotos_124005594-stock-illustration-emoticon-with-rose-between-teeth.jpg"
           alt="Meme da rosa"
