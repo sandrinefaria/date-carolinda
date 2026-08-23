@@ -5,7 +5,7 @@ import { RetroWindow, PixelHeart } from "@/components/RetroWindow";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SIM ou COM CERTEZA? — Convite de Date Retrô" },
+      { title: "Carolinda 💙​" },
       {
         name: "description",
         content:
