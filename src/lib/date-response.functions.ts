@@ -11,7 +11,7 @@ const saveResponseSchema = z.object({
 });
 
 export const saveDateResponse = createServerFn({ method: "POST" })
-  .inputValidator((data) => saveResponseSchema.parse(data))
+  .validator((data) => saveResponseSchema.parse(data))
   .handler(async ({ data }) => {
     const { createClient } = await import("@supabase/supabase-js");
     const { Database } = await import("@/integrations/supabase/types");
