@@ -262,9 +262,7 @@ function StepSac({
   const [sending, setSending] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    
+  async function handleContinue() {
     if (!value.trim()) {
       setErrorMsg(true);
       return;
@@ -288,52 +286,51 @@ function StepSac({
 
   return (
     <RetroWindow title="sac_da_consumidora.txt">
-      <form onSubmit={handleSubmit}>
-        <div
-          className="bg-input p-4 leading-tight"
-          style={{ border: "3px solid var(--border)" }}
+      <div
+        className="bg-input p-4 leading-tight"
+        style={{ border: "3px solid var(--border)" }}
+      >
+        <p className="font-pixel text-[0.6rem] leading-relaxed text-primary">
+          ☎ canal oficial de atendimento e sugestões
+        </p>
+        <p className="mt-3">
+          Deixe sua mensagem, reclamação ou sugestão abaixo. Assim que possível, iremos te responder (porém, depende):
+        </p>
+      </div>
+
+      <textarea
+        value={value}
+        onChange={(e) => {
+          onChange(e.target.value);
+          if (e.target.value.trim()) setErrorMsg(false);
+        }}
+        rows={6}
+        placeholder="digite aqui o seu recado..."
+        className="mt-4 w-full resize-none bg-card p-3 font-term text-lg text-foreground outline-none"
+        style={{
+          border: "3px solid var(--border)",
+          backgroundImage:
+            "repeating-linear-gradient(oklch(0.97 0.02 330) 0 27px, oklch(0.86 0.03 320) 27px 28px)",
+        }}
+      />
+
+      {errorMsg && (
+        <div className="mt-3 bg-destructive/10 p-3 border-2 border-destructive animate-bounce">
+          <p className="font-pixel text-[0.6rem] text-destructive leading-relaxed text-center">
+            ⚠ Você não tem escapatória! Agora vai precisar digitar alguma coisa no sistema antes de prosseguir.
+          </p>
+        </div>
+      )}
+
+      <div className="mt-4 flex items-center justify-end gap-3">
+        <button
+          onClick={handleContinue}
+          disabled={sending}
+          className="pixel-btn px-5 py-3 text-[0.6rem]"
         >
-          <p className="font-pixel text-[0.6rem] leading-relaxed text-primary">
-            ☎ canal oficial de atendimento e sugestões
-          </p>
-          <p className="mt-3">
-            Deixe sua mensagem, reclamação ou sugestão abaixo. Assim que possível, iremos te responder (porém, depende):
-          </p>
-        </div>
-
-        <textarea
-          required
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-            if (e.target.value.trim()) setErrorMsg(false);
-          }}
-          rows={6}
-          placeholder="digite aqui o seu recado..."
-          className="mt-4 w-full resize-none bg-card p-3 font-term text-lg text-foreground outline-none"
-          style={{
-            border: "3px solid var(--border)",
-            backgroundImage:
-              "repeating-linear-gradient(oklch(0.97 0.02 330) 0 27px, oklch(0.86 0.03 320) 27px 28px)",
-          }}
-        />
-
-        {errorMsg && (
-          <p className="mt-2 font-pixel text-[0.6rem] text-destructive animate-bounce">
-            ⚠ Você não tem escapatória! Agora vai precisar digitar alguma coisa no sistema.
-          </p>
-        )}
-
-        <div className="mt-4 flex items-center justify-end gap-3">
-          <button
-            type="submit"
-            disabled={sending}
-            className="pixel-btn px-5 py-3 text-[0.6rem]"
-          >
-            {sending ? "enviando..." : "continuar »"}
-          </button>
-        </div>
-      </form>
+          {sending ? "enviando..." : "continuar »"}
+        </button>
+      </div>
     </RetroWindow>
   );
 }
@@ -377,11 +374,11 @@ function StepCalendar({
 
       <div className="mt-5" style={{ border: "3px solid var(--border)" }}>
         <div className="flex items-center justify-between bg-primary px-3 py-2 font-pixel text-[0.6rem] text-primary-foreground">
-          <button type="button" onClick={() => shift(-1)}>« </button>
+          <button onClick={() => shift(-1)}>« </button>
           <span>
             {MONTHS[m]} {y}
           </span>
-          <button type="button" onClick={() => shift(1)}> »</button>
+          <button onClick={() => shift(1)}> »</button>
         </div>
         <div className="grid grid-cols-7 bg-card text-center">
           {WEEKDAYS.map((w, i) => (
@@ -397,7 +394,6 @@ function StepCalendar({
             const active = picked?.y === y && picked?.m === m && picked?.d === d;
             return (
               <button
-                type="button"
                 key={d}
                 onClick={() => onPick({ y, m, d })}
                 className={`aspect-square text-lg ${
