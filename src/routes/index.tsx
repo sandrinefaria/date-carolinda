@@ -486,6 +486,11 @@ function StepFinal({
           >
             📅 salvar na agenda
           </a>
+          {saved && (
+            <p className="blink font-pixel text-[0.55rem] text-primary">
+              ✉ recado arquivado no servidor do amor
+            </p>
+          )}
         </div>
       </div>
     </>
