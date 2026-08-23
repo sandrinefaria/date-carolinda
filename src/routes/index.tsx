@@ -11,7 +11,7 @@ export const Route = createFileRoute("/")({
         content:
           "Convite interativo de date em estética anos 2000: escolha o rolê, mande sua reclamação no SAC e marque a data.",
       },
-      { property: "og:title", content: "SIM ou COM CERTEZA? — Convite de Date Retrô" },
+      { property: "og:title", content: "Carolinda 💙​" },
       {
         property: "og:description",
         content: "O nosso próximo date vai acontecer: Sim ou Com Certeza?",
