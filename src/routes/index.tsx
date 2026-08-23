@@ -171,7 +171,7 @@ function ZiggyPopup({ onClose }: { onClose: () => void }) {
         </div>
         <div className="flex gap-4 p-5 items-center">
           <img
-            src="/Ziggy.webp"
+            src="/Ziggy.jpg"
             alt="Ziggy, o husky guardião"
             className="h-24 w-24 shrink-0 border-3 border-border object-cover"
             style={{ borderWidth: 3 }}
@@ -421,9 +421,16 @@ function StepFinal({
   picked: { y: number; m: number; d: number } | null;
 }) {
   const [confetti, setConfetti] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     setConfetti(true);
+    // Tenta reproduzir o áudio de forma segura após montar a tela
+    if (audioRef.current) {
+      audioRef.current.play().catch(() => {
+        // Caso o navegador bloqueie, o player visível abaixo resolve
+      });
+    }
   }, []);
 
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -431,7 +438,7 @@ function StepFinal({
 
   return (
     <RetroWindow title="confirmacao_final.exe" className={confetti ? "animate-scale-in" : ""}>
-      <audio autoPlay src="/lobo.mp3" />
+      <audio ref={audioRef} src="/lobo.mp3" preload="auto" controls className="hidden" />
 
       <h2 className="font-pixel text-sm leading-relaxed text-primary sm:text-lg">
         Tudo certo! Seu interesse foi registrado com sucesso.
