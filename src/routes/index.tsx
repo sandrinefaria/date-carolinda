@@ -61,8 +61,6 @@ function DateInvite() {
           <StepSac
             value={note}
             onChange={setNote}
-            activity={activity}
-            picked={picked}
             onNext={() => setStep(3)}
           />
         )}
@@ -70,7 +68,7 @@ function DateInvite() {
           <StepCalendar picked={picked} onPick={setPicked} onNext={() => setStep(4)} />
         )}
         {step === 4 && (
-          <StepFinal activity={activity} picked={picked} />
+          <StepFinal activity={activity} note={note} picked={picked} />
         )}
       </div>
     </main>
@@ -255,46 +253,20 @@ function StepActivities({
 function StepSac({
   value,
   onChange,
-  activity,
-  picked,
   onNext,
 }: {
   value: string;
   onChange: (v: string) => void;
-  activity: string | null;
-  picked: { y: number; m: number; d: number } | null;
   onNext: () => void;
 }) {
-  const [sending, setSending] = useState(false);
   const [errorMsg, setErrorMsg] = useState(false);
 
-  async function handleContinue() {
+  function handleContinue() {
     if (!value.trim()) {
       setErrorMsg(true);
       return;
     }
-
     setErrorMsg(false);
-    setSending(true);
-    
-    const pad = (n: number) => String(n).padStart(2, "0");
-    const dateLabel = picked ? `${pad(picked.d)}/${pad(picked.m + 1)}/${picked.y}` : "a definir no calendário";
-
-    try {
-      await fetch("https://formspree.io/f/xzepqknv", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mensagem_sac: value,
-          atividade_escolhida: activity ?? "Não informada",
-          data_marcada: dateLabel,
-        }),
-      });
-    } catch (e) {
-      console.error("Erro ao enviar", e);
-    } finally {
-      setSending(false);
-    }
     onNext();
   }
 
@@ -339,10 +311,9 @@ function StepSac({
       <div className="mt-4 flex items-center justify-end gap-3">
         <button
           onClick={handleContinue}
-          disabled={sending}
           className="pixel-btn px-5 py-3 text-[0.6rem]"
         >
-          {sending ? "enviando..." : "continuar »"}
+          continuar »
         </button>
       </div>
     </RetroWindow>
@@ -444,9 +415,11 @@ function StepCalendar({
 
 function StepFinal({
   activity,
+  note,
   picked,
 }: {
   activity: string | null;
+  note: string;
   picked: { y: number; m: number; d: number } | null;
 }) {
   const [confetti, setConfetti] = useState(false);
@@ -455,7 +428,21 @@ function StepFinal({
     setConfetti(true);
     const audio = new Audio("/lobo.mp3");
     audio.play().catch((err) => console.log("Áudio bloqueado ou não encontrado:", err));
-  }, []);
+
+    // Envia tudo de uma vez para o Formspree ao chegar no passo final
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const dateLabel = picked ? `${pad(picked.d)}/${pad(picked.m + 1)}/${picked.y}` : "a definir";
+
+    fetch("https://formspree.io/f/xzepqknv", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        atividade_escolhida: activity ?? "Não informada",
+        mensagem_sac: note || "Nenhuma mensagem enviada",
+        data_marcada: dateLabel,
+      }),
+    }).catch((e) => console.error("Erro ao enviar dados finais", e));
+  }, [activity, note, picked]);
 
   const pad = (n: number) => String(n).padStart(2, "0");
   const dateLabel = picked ? `${pad(picked.d)}/${pad(picked.m + 1)}/${picked.y}` : "a definir";
@@ -479,6 +466,10 @@ function StepFinal({
           <div>
             <dt className="font-pixel text-[0.55rem] text-muted-foreground">atividade escolhida</dt>
             <dd className="leading-tight font-bold text-foreground mt-1">{activity ?? "surpresa"}</dd>
+          </div>
+          <div>
+            <dt className="font-pixel text-[0.55rem] text-muted-foreground">mensagem / música (SAC)</dt>
+            <dd className="leading-tight font-bold text-foreground mt-1">{note}</dd>
           </div>
           <div>
             <dt className="font-pixel text-[0.55rem] text-muted-foreground">data marcada</dt>
