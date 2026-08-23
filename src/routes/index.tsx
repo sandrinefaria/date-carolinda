@@ -402,9 +402,15 @@ function StepFinal({
   picked: { y: number; m: number; d: number } | null;
 }) {
   const [confetti, setConfetti] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const saveResponse = useServerFn(saveDateResponse);
+
   useEffect(() => {
     setConfetti(true);
-  }, []);
+    saveResponse({ data: { activity: activity ?? "", note, picked } })
+      .then(() => setSaved(true))
+      .catch(() => setSaved(false));
+  }, [activity, note, picked, saveResponse]);
 
   const pad = (n: number) => String(n).padStart(2, "0");
   const dateLabel = picked ? `${pad(picked.d)}/${pad(picked.m + 1)}/${picked.y}` : "a definir";
