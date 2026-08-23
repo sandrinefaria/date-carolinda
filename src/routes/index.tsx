@@ -260,61 +260,80 @@ function StepSac({
   onNext: () => void;
 }) {
   const [sending, setSending] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(false);
 
-  async function handleContinue() {
-    if (value.trim()) {
-      setSending(true);
-      try {
-        await fetch("https://formspree.io/f/xzepqknv", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ mensagem_sac: value }),
-        });
-      } catch (e) {
-        console.error("Erro ao enviar", e);
-      } finally {
-        setSending(false);
-      }
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    
+    if (!value.trim()) {
+      setErrorMsg(true);
+      return;
+    }
+
+    setErrorMsg(false);
+    setSending(true);
+    try {
+      await fetch("https://formspree.io/f/xzepqknv", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mensagem_sac: value }),
+      });
+    } catch (e) {
+      console.error("Erro ao enviar", e);
+    } finally {
+      setSending(false);
     }
     onNext();
   }
 
   return (
     <RetroWindow title="sac_da_consumidora.txt">
-      <div
-        className="bg-input p-4 leading-tight"
-        style={{ border: "3px solid var(--border)" }}
-      >
-        <p className="font-pixel text-[0.6rem] leading-relaxed text-primary">
-          ☎ canal oficial de atendimento e sugestões
-        </p>
-        <p className="mt-3">
-          Deixe sua mensagem, reclamação ou sugestão abaixo. Assim que possível, iremos te responder (porém, depende):
-        </p>
-      </div>
-
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        rows={6}
-        placeholder="digite aqui o seu recado..."
-        className="mt-4 w-full resize-none bg-card p-3 font-term text-lg text-foreground outline-none"
-        style={{
-          border: "3px solid var(--border)",
-          backgroundImage:
-            "repeating-linear-gradient(oklch(0.97 0.02 330) 0 27px, oklch(0.86 0.03 320) 27px 28px)",
-        }}
-      />
-
-      <div className="mt-4 flex items-center justify-end gap-3">
-        <button
-          onClick={handleContinue}
-          disabled={sending}
-          className="pixel-btn px-5 py-3 text-[0.6rem]"
+      <form onSubmit={handleSubmit}>
+        <div
+          className="bg-input p-4 leading-tight"
+          style={{ border: "3px solid var(--border)" }}
         >
-          {sending ? "enviando..." : "continuar »"}
-        </button>
-      </div>
+          <p className="font-pixel text-[0.6rem] leading-relaxed text-primary">
+            ☎ canal oficial de atendimento e sugestões
+          </p>
+          <p className="mt-3">
+            Deixe sua mensagem, reclamação ou sugestão abaixo. Assim que possível, iremos te responder (porém, depende):
+          </p>
+        </div>
+
+        <textarea
+          required
+          value={value}
+          onChange={(e) => {
+            onChange(e.target.value);
+            if (e.target.value.trim()) setErrorMsg(false);
+          }}
+          rows={6}
+          placeholder="digite aqui o seu recado..."
+          className="mt-4 w-full resize-none bg-card p-3 font-term text-lg text-foreground outline-none"
+          style={{
+            border: "3px solid var(--border)",
+            backgroundImage:
+              "repeating-linear-gradient(oklch(0.97 0.02 330) 0 27px, oklch(0.86 0.03 320) 27px 28px)",
+          }}
+        />
+
+        {errorMsg && (
+          <p className="mt-2 font-pixel text-[0.6rem] text-destructive animate-bounce">
+            ⚠ Você não tem escapatória! Agora vai precisar digitar alguma coisa no sistema.
+          </p>
+        )}
+
+        <div className="mt-4 flex items-center justify-end gap-3">
+          <button
+            type="submit"
+            disabled={sending}
+            className="pixel-btn px-5 py-3 text-[0.6rem]"
+          >
+            {sending ? "enviando..." : "continuar »"}
+          </button>
+        </div>
+      </form>
     </RetroWindow>
   );
 }
@@ -347,7 +366,6 @@ function StepCalendar({
     <RetroWindow title="calendario_do_crime.exe">
       <h2 className="font-pixel text-sm text-foreground">Defina a data oficial (não é só a minha agenda que está disponível pra você):</h2>
 
-      {/* Imagem miu.png no tamanho ideal */}
       <div className="mt-4 flex justify-center">
         <img
           src="/miu.png"
@@ -359,11 +377,11 @@ function StepCalendar({
 
       <div className="mt-5" style={{ border: "3px solid var(--border)" }}>
         <div className="flex items-center justify-between bg-primary px-3 py-2 font-pixel text-[0.6rem] text-primary-foreground">
-          <button onClick={() => shift(-1)}>« </button>
+          <button type="button" onClick={() => shift(-1)}>« </button>
           <span>
             {MONTHS[m]} {y}
           </span>
-          <button onClick={() => shift(1)}> »</button>
+          <button type="button" onClick={() => shift(1)}> »</button>
         </div>
         <div className="grid grid-cols-7 bg-card text-center">
           {WEEKDAYS.map((w, i) => (
@@ -379,6 +397,7 @@ function StepCalendar({
             const active = picked?.y === y && picked?.m === m && picked?.d === d;
             return (
               <button
+                type="button"
                 key={d}
                 onClick={() => onPick({ y, m, d })}
                 className={`aspect-square text-lg ${
