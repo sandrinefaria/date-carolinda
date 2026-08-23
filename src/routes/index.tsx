@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
 import { RetroWindow, PixelHeart } from "@/components/RetroWindow";
+import { saveDateResponse } from "@/lib/date-response.functions";
 import ziggy from "@/assets/ziggy.webp.asset.json";
 
 export const Route = createFileRoute("/")({
